@@ -12,9 +12,14 @@ use Throwable;
 
 class ForecastController
 {
-    public function index(Request $request, string $cityName, GetForecastHandler $handler)
+    public function index(Request $request, GetForecastHandler $handler)
     {
         Log::info('get forecast request arrived', $request->toArray());
+        $cityName = $request->query('cityName');
+
+        if (!$cityName) {
+            return response()->json(['message' => 'cityName is required'], 400);
+        }
 
         try {
             $query = new GetForecastQuery($cityName);
