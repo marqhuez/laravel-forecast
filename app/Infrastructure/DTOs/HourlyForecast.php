@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\DTOs;
 
-class OneHourForecast
+class HourlyForecast
 {
     public function __construct(public readonly string $time, public readonly float $temp) {
     }

@@ -37,7 +37,15 @@ class ForecastController
             return response()->json(['message' => "unexpected error"], 500);
         }
 
-        return response()->json($result);
+
+        return view(
+            'forecast-table',
+            [
+                "gpsCoordinates" => $result->gpsCoordinates,
+                "unit" => $result->unit,
+                "hourlyForecasts" => $result->hourlyForecasts
+            ]
+        );
     }
 
     public function createForecast(Request $req)

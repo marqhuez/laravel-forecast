@@ -6,11 +6,11 @@ use App\Infrastructure\DTOs\GPSCoordinates;
 
 class Forecast
 {
-    /** @param OneHourForecast[] $oneHourForecasts */
+    /** @param HourlyForecast[] $oneHourForecasts */
     public function __construct(
         public readonly GPSCoordinates $gpsCoordinates,
         public readonly string $unit,
-        public readonly array $oneHourForecasts
+        public readonly array $hourlyForecasts
     ) {
     }
 }

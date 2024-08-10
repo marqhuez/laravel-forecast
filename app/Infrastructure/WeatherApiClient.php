@@ -4,7 +4,7 @@ namespace App\Infrastructure;
 
 use App\Infrastructure\DTOs\Forecast;
 use App\Infrastructure\DTOs\GPSCoordinates;
-use App\Infrastructure\DTOs\OneHourForecast;
+use App\Infrastructure\DTOs\HourlyForecast;
 use Illuminate\Support\Facades\Http;
 
 class WeatherApiClient
@@ -19,7 +19,7 @@ class WeatherApiClient
 
         $forecasts = [];
         foreach ($response['hourly']['time'] as $key => $time) {
-            $forecasts[] = new OneHourForecast($time, $response['hourly']['temperature_2m'][$key]);
+            $forecasts[] = new HourlyForecast($time, $response['hourly']['temperature_2m'][$key]);
         }
 
         return new Forecast($gpsCoords, $response['hourly_units']['temperature_2m'], $forecasts);
