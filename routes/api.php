@@ -8,4 +8,5 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/forecasts', [ForecastController::class, 'index']);
 Route::post('/forecasts', [ForecastController::class, 'create']);
