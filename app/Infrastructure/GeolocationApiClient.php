@@ -9,14 +9,13 @@ class GeolocationApiClient
 {
     public function fetchGPSCoordFromCityName(string $cityName)
     {
-        $apiKey = "5e41caf28ba141fca47f80db6be4d7ab";
-        $response = Http::get('https://api.geoapify.com/v1/geocode/search', [
+        $response = Http::get(env('GEOLOCATION_API_URL'), [
             'text' => $cityName,
-            'apiKey' => $apiKey
+            'apiKey' => env('GEOLOCATION_API_KEY')
         ])->json();
 
-        $lon = $response['features'][0]['properties']["lon"];
-        $lat = $response['features'][0]['properties']["lat"];
+        $lon = $response['features'][0]['properties']['lon'];
+        $lat = $response['features'][0]['properties']['lat'];
 
         return new GPSCoordinates($lon, $lat);
     }

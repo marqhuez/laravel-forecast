@@ -11,17 +11,17 @@ class WeatherApiClient
 {
     public function fetchForecastForCoords(GPSCoordinates $gpsCoords)
     {
-        $response = Http::get('https://api.open-meteo.com/v1/forecast', [
+        $response = Http::get(env('WEATHER_API_URL'), [
             'latitude' => $gpsCoords->lat,
             'longitude' => $gpsCoords->lon,
             'hourly' => 'temperature_2m'
         ])->json();
 
         $forecasts = [];
-        foreach ($response["hourly"]["time"] as $key => $time) {
-            $forecasts[] = new OneHourForecast($time, $response["hourly"]["temperature_2m"][$key]);
+        foreach ($response['hourly']['time'] as $key => $time) {
+            $forecasts[] = new OneHourForecast($time, $response['hourly']['temperature_2m'][$key]);
         }
 
-        return new Forecast($gpsCoords, $response["hourly_units"]["temperature_2m"], $forecasts);
+        return new Forecast($gpsCoords, $response['hourly_units']['temperature_2m'], $forecasts);
     }
 }
