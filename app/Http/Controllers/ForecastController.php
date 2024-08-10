@@ -7,19 +7,29 @@ use App\Application\GetForecastQuery;
 use App\Models\Forecast;
 use App\Shared\ExpectedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ForecastController
 {
-    public function index(Request $req, GetForecastHandler $handler)
+    public function index(Request $request, string $cityName, GetForecastHandler $handler)
     {
-        $query = new GetForecastQuery("Debrecen");
+        Log::info('get forecast request arrived', $request->toArray());
+
         try {
+            $query = new GetForecastQuery($cityName);
             $result = $handler->getForecast($query);
         } catch (ExpectedException $exception) {
-            return response()->json(["message" => $exception->getMessage()], $exception->getCode());
+            Log::error('error while requesting forecast', [
+                "error" => $exception->getMessage(),
+                "prevMessage" => $exception->getPrevious()->getMessage()
+            ]);
+
+            return response()->json(['message' => $exception->getMessage()], $exception->getCode());
         } catch (Throwable $exception) {
-            return response()->json(["message" => "unexpected error"], 500);
+            Log::error('unexpected error while requesting forecast', ["error" => $exception->getMessage()]);
+
+            return response()->json(['message' => "unexpected error"], 500);
         }
 
         return response()->json($result);
