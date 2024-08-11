@@ -4,6 +4,8 @@ namespace App\Infrastructure;
 
 use App\Shared\ExpectedException;
 use App\Domain\ForecastFetcherInterface;
+use App\Jobs\SyncForecasts;
+use App\Models\Forecast;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -26,6 +28,8 @@ class ForecastFetcherAdapter implements ForecastFetcherInterface
 
             throw new ExpectedException($message, 400, $exception);
         }
+
+        SyncForecasts::dispatch($forecast, $cityName);
 
         return $forecast;
     }
