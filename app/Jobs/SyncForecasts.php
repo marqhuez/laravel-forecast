@@ -34,26 +34,9 @@ class SyncForecasts implements ShouldQueue
         foreach ($this->forecast->hourlyForecasts as $forecast) {
             $time = strtotime($forecast->time);
 
-            $existingForecast = Forecast::where('city', $this->cityName)->where('time', $time);
-            $result = $existingForecast->first();
+            $newForecast = Forecast::updateOrCreate(['city' => $this->cityName, 'time' => $time], ['temp' => $forecast->temp]);
 
-            if ($result) {
-                Log::info('existing forecast found, updating', ['city' => $result->city, 'temp' => $result->temperature]);
-
-                $existingForecast->update(['temperature' => $forecast->temp]);
-            } else {
-                Log::info('existing forecast not found, creating', [
-                    'city' => $this->cityName,
-                    'time' => $forecast->time,
-                    'temp' => $forecast->temp
-                ]);
-
-                Forecast::create([
-                    "city" => $this->cityName,
-                    "time" => $time,
-                    "temperature" => $forecast->temp
-                ]);
-            }
+            Log::info('created or updated forecast', ['city' => $newForecast->city, 'temp' => $newForecast->temperature, 'time' => $newForecast->time]);
         }
     }
 }
