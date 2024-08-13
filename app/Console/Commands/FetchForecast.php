@@ -36,8 +36,10 @@ class FetchForecast extends Command
         $cityName = $this->argument('cityName');
 
         if (!$cityName) {
-            Log::error('cityName is requred');
-            return response()->json(['message' => 'cityName is required'], 400);
+            Log::error('cityName is required');
+
+            $this->error('cityName is required');
+            return 1;
         }
 
         $this->info('requesting forecast for city: ' . $cityName);
